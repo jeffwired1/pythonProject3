@@ -12,5 +12,8 @@ soup = BeautifulSoup(page.content, 'html.parser')
 # print(soup.prettify())
 
 a = soup.prettify()
-print(a.find("test-false wu-unit wu-unit-pressure ng-star-inserted"))
+b = a.find("test-false wu-unit wu-unit-pressure ng-star-inserted")
+print(b)
+
+# wu-value.wu-value-to
 
