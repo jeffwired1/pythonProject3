@@ -10,18 +10,17 @@ print(page.status_code)
 soup = BeautifulSoup(page.content, 'html.parser')
 a = str(soup)
 
-print(soup)
+# print(a)
 
 # print(soup.prettify())
 
 # Find current temperature
-b = a.find("TEMPERATURE")
-c = a.find("color", b)
+b = a.find("test-true wu-unit wu-unit-temperature is-degree-visible ng-star-inserted")
+c = a.find("wu-value wu-value-to", b)
 d = a.find(">", c)
 e = a.find("<", d)
-g = a[d+2:e-2]
+g = a[d+1:e]
 current_temperature = g
-print(b, c, d, e, g)
 
 # Find current pressure
 b = a.find("test-false wu-unit wu-unit-pressure ng-star-inserted")
@@ -31,16 +30,35 @@ e = a.find("<", d)
 g = a[d+1:e]
 current_pressure = g
 
-print(current_temperature, current_pressure)
+# Find current humidity
+b = a.find("test-false wu-unit wu-unit-humidity ng-star-inserted")
+c = a.find("wu-value wu-value-to", b)
+d = a.find(">", c)
+e = a.find("<", d)
+g = a[d+1:e]
+current_humidity = g
+
+# Find current wind speed
+b = a.find("test-false wu-unit ng-star-inserted")
+c = a.find("wu-value wu-value-to", b)
+d = a.find(">", c)
+e = a.find("<", d)
+g = a[d+1:e]
+current_wind_speed = g
+
+# Find current wind gust
+b = a.find(">GUST<")
+c = a.find("wu-value wu-value-to", b)
+d = a.find(">", c)
+e = a.find("<", d)
+g = a[d+1:e]
+current_wind_gust = g
 
 
 
+print(b, c, d, e, g)
+
+print(current_temperature, current_pressure, current_humidity, current_wind_speed, current_wind_gust)
 
 
-
-
-
-
-
-# wu-value.wu-value-to
 
