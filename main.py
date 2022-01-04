@@ -86,6 +86,14 @@ e = a.find("<", d)
 g = a[d+1:e]
 current_wind_direction = g
 
+# Find current solar radiation
+b = a.find("lib-tile-solar-radiation")
+c = a.find("weather__text", b)
+d = a.find(">", c)
+e = a.find("<", d)
+g = a[d+1:e-9]
+current_solar_radiation = g
+
 print(b, c, d, e, g)
 
 print('Current Temperature', current_temperature, 'F')
@@ -97,6 +105,7 @@ print('Current Wind Gust', current_wind_gust, 'MPH')
 print('Current Wind Direction', current_wind_direction, '')
 print('Current Total Precipitation', current_total_precipitation, 'in')
 print('Current Total Precipitation Rate', current_total_precipitation_rate, 'in/hr')
+print('Current Solar Radiation', current_solar_radiation, 'w/m²')
 
 
 
