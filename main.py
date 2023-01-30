@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 # page = requests.get("https://dataquestio.github.io/web-scraping-pages/simple.html")
-page = requests.get("https://www.wunderground.com/dashboard/pws/KCALAGUN69/table/2021-12-31/2021-12-31/daily")
+page = requests.get("https://www.wunderground.com/dashboard/pws/KCALAGUN1276/graph/2023-01-30/2023-01-30/daily")
 print(page)
 print(page.status_code)
 
