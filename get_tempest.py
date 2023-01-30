@@ -78,22 +78,21 @@ g = a[d+1:e]
 current_dewpoint = g
 
 # Find current wind direction
-b = a.find(">WIND FROM<")
-c = a.find("weather__text", b)
+b = a.find("list-summary-view")
+c = a.find("wind_direction", b)
 d = a.find(">", c)
 e = a.find("<", d)
 g = a[d+1:e]
 current_wind_direction = g
 
 # Find current solar radiation
-b = a.find("lib-tile-solar-radiation")
-c = a.find("weather__text", b)
+b = a.find("list-summary-view")
+c = a.find("Solar Radiation", b)
+c = a.find("solar_radiation", c)
 d = a.find(">", c)
-e = a.find("<", d)
-g = a[d+1:e-9]
+e = a.find(" ", d)
+g = a[d+1:e]
 current_solar_radiation = g
-
-print(b, c, d, e, g)
 
 print('Current Temperature', current_temperature, 'F')
 print('Current Dewpoint', current_dewpoint, 'F')
