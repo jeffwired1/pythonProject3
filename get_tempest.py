@@ -109,3 +109,4 @@ def get_current_readings():
     print('Current Total Precipitation', current_total_precipitation, 'in')
     print('Current Total Precipitation Rate', current_total_precipitation_rate, 'in/hr')
     print('Current Solar Radiation', current_solar_radiation, 'w/m²')
+
