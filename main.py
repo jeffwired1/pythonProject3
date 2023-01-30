@@ -5,9 +5,6 @@ from get_tempest import get_current_readings
 
 get_current_readings()
 
-
-exit()
-
 # page = requests.get("https://dataquestio.github.io/web-scraping-pages/simple.html")
 page = requests.get("https://www.wunderground.com/dashboard/pws/KCALAGUN1276/graph/2023-01-30/2023-01-30/daily")
 print(page)
