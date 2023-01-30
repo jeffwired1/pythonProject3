@@ -12,7 +12,7 @@ a = driver.page_source
 # print(s)
 
 # Find current temperature
-b = a.find("cc-current-temp")
+b = a.find("list-summary-view")
 c = a.find("air_temperature", b)
 d = a.find(">", c)
 e = a.find("<", d)
@@ -20,58 +20,60 @@ g = a[d+1:e]
 current_temperature = g
 
 # Find current pressure
-b = a.find("cc-pressure")
-c = a.find("cc-data-value", b)
+b = a.find("list-summary-view")
+c = a.find("barometric_pressure", b)
 d = a.find(">", c)
-e = a.find("<", d)
+e = a.find(" ", d)
 g = a[d+1:e]
 current_pressure = g
 
 # Find current humidity
-b = a.find("test-false wu-unit wu-unit-humidity ng-star-inserted")
-c = a.find("wu-value wu-value-to", b)
+b = a.find("list-summary-view")
+c = a.find("relative_humidity", b)
 d = a.find(">", c)
-e = a.find("<", d)
+e = a.find("%", d)
 g = a[d+1:e]
 current_humidity = g
 
 # Find current wind speed
-b = a.find("test-false wu-unit ng-star-inserted")
-c = a.find("wu-value wu-value-to", b)
+b = a.find("list-summary-view")
+c = a.find("wind_avg", b)
 d = a.find(">", c)
 e = a.find("<", d)
 g = a[d+1:e]
 current_wind_speed = g
 
 # Find current wind gust
-b = a.find(">GUST<")
-c = a.find("wu-value wu-value-to", b)
+b = a.find("list-summary-view")
+c = a.find("wind_gust", b)
 d = a.find(">", c)
-e = a.find("<", d)
+e = a.find(" ", d)
 g = a[d+1:e]
 current_wind_gust = g
 
 # Find current total precipitation
-b = a.find(">PRECIP ACCUM<")
-c = a.find("wu-value wu-value-to", b)
+b = a.find("history-view-target")
+c = a.find("Total - in", b)
+c = a.find("value", c)
 d = a.find(">", c)
 e = a.find("<", d)
 g = a[d+1:e]
 current_total_precipitation = g
 
 # Find current total precipitation rate
-b = a.find(">PRECIP RATE<")
-c = a.find("wu-value wu-value-to", b)
-d = a.find(">", c)
-e = a.find("<", d)
+b = a.find("list-summary-view")
+c = a.find("Rain Intensity", b)
+c = a.find("precip", c)
+d = a.find("(", c)
+e = a.find(" ", d)
 g = a[d+1:e]
 current_total_precipitation_rate = g
 
 # Find current dewpoint
-b = a.find(">DEWPOINT<")
-c = a.find("wu-value wu-value-to", b)
+b = a.find("list-summary-view")
+c = a.find("dew_point", b)
 d = a.find(">", c)
-e = a.find("<", d)
+e = a.find(" ", d)
 g = a[d+1:e]
 current_dewpoint = g
 
