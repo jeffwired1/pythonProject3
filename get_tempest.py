@@ -10,7 +10,7 @@ def get_current_readings():
     driver.get("https://tempestwx.com/station/84479/")
     # access HTML source code with page_source method
     a = driver.page_source
-    print(a)
+    # print(a)
 
     # Find current temperature
     b = a.find("forecast-view")
