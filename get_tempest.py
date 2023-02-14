@@ -10,26 +10,34 @@ def get_current_readings():
     driver.get("https://tempestwx.com/station/84479/")
     # access HTML source code with page_source method
     a = driver.page_source
-    # print(s)
+    print(a)
 
     # Find current temperature
-    b = a.find("list-summary-view")
+    b = a.find("forecast-view")
     c = a.find("air_temperature", b)
     d = a.find(">", c)
     e = a.find("<", d)
     g = a[d+1:e]
     current_temperature = g
 
-    # Find current pressure
-    b = a.find("list-summary-view")
-    c = a.find("barometric_pressure", b)
+    # Find current feels-like temperature
+    b = a.find("forecast-view")
+    c = a.find("cc-feels-like-temp", b)
     d = a.find(">", c)
-    e = a.find(" ", d)
+    e = a.find("<", d)
+    g = a[d+1:e-1]
+    feels_like_temperature = g
+
+    # Find current pressure
+    b = a.find("forecast-view")
+    c = a.find("sea_level_pressure", b)
+    d = a.find(">", c)
+    e = a.find("<", d)
     g = a[d+1:e]
     current_pressure = g
 
     # Find current humidity
-    b = a.find("list-summary-view")
+    b = a.find("forecast-view")
     c = a.find("relative_humidity", b)
     d = a.find(">", c)
     e = a.find("%", d)
@@ -37,7 +45,7 @@ def get_current_readings():
     current_humidity = g
 
     # Find current wind speed
-    b = a.find("list-summary-view")
+    b = a.find("forecast-view")
     c = a.find("wind_avg", b)
     d = a.find(">", c)
     e = a.find("<", d)
@@ -79,7 +87,7 @@ def get_current_readings():
     current_dewpoint = g
 
     # Find current wind direction
-    b = a.find("list-summary-view")
+    b = a.find("forecast-view")
     c = a.find("wind_direction", b)
     d = a.find(">", c)
     e = a.find("<", d)
@@ -96,6 +104,7 @@ def get_current_readings():
     current_solar_radiation = g
 
     print('Current Temperature', current_temperature, 'F')
+    print('Current Feels-Like Temperature', feels_like_temperature, 'F')
     print('Current Dewpoint', current_dewpoint, 'F')
     print('Current Pressure', current_pressure, 'in/hg')
     print('Current Humidity', current_humidity, '%')
