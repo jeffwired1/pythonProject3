@@ -1,7 +1,10 @@
 from selenium import webdriver
 
+# add options to chromedriver
 options = webdriver.ChromeOptions()
+# tell chromedriver to work in the background
 options.add_argument("headless")
+# define chromedriver
 driver = webdriver.Chrome(executable_path="C:/windows/chromedriver.exe", chrome_options=options)
 
 
@@ -10,6 +13,11 @@ def get_current_readings():
     driver.get("https://tempestwx.com/station/84479/")
     # access HTML source code with page_source method
     a = driver.page_source
+
+    # text_file = open("sample.txt", "w")
+    # text_file.write(a)
+    # text_file.close()
+
     # print(a)
 
     # Find current temperature
@@ -19,6 +27,7 @@ def get_current_readings():
     e = a.find("<", d)
     g = a[d+1:e]
     current_temperature = g
+    current_temperature_out = "Temperature " + g + " F"
 
     # Find current feels-like temperature
     b = a.find("forecast-view")
@@ -26,7 +35,8 @@ def get_current_readings():
     d = a.find(">", c)
     e = a.find("<", d)
     g = a[d+1:e-1]
-    feels_like_temperature = g
+    current_feels_like_temperature = g
+    current_feels_like_temperature_out = "Feels Like Temperature " + g + " F"
 
     # Find current pressure
     b = a.find("forecast-view")
@@ -35,6 +45,7 @@ def get_current_readings():
     e = a.find("<", d)
     g = a[d+1:e]
     current_pressure = g
+    current_pressure_out = "Pressure " + g + " in/hg"
 
     # Find current humidity
     b = a.find("forecast-view")
@@ -43,6 +54,7 @@ def get_current_readings():
     e = a.find("%", d)
     g = a[d+1:e]
     current_humidity = g
+    current_humidity_out = "Humidity " + g + " %"
 
     # Find current wind speed
     b = a.find("forecast-view")
@@ -51,6 +63,7 @@ def get_current_readings():
     e = a.find("<", d)
     g = a[d+1:e]
     current_wind_speed = g
+    current_wind_speed_out = "Wind Speed " + g + " MPH"
 
     # Find current wind gust
     b = a.find("list-summary-view")
@@ -59,6 +72,7 @@ def get_current_readings():
     e = a.find(" ", d)
     g = a[d+1:e]
     current_wind_gust = g
+    current_wind_gust_out = "Wind Gust " + g + " MPH"
 
     # Find current total precipitation
     b = a.find("history-view-target")
@@ -68,6 +82,7 @@ def get_current_readings():
     e = a.find("<", d)
     g = a[d+1:e]
     current_total_precipitation = g
+    current_total_precipitation_out = "Total Precipitation " + g + " in"
 
     # Find current total precipitation rate
     b = a.find("list-summary-view")
@@ -77,6 +92,7 @@ def get_current_readings():
     e = a.find(" ", d)
     g = a[d+1:e]
     current_total_precipitation_rate = g
+    current_total_precipitation_rate_out = "Precipitation Rate " + g + " in/hr"
 
     # Find current dewpoint
     b = a.find("list-summary-view")
@@ -85,6 +101,7 @@ def get_current_readings():
     e = a.find(" ", d)
     g = a[d+1:e]
     current_dewpoint = g
+    current_dewpoint_out = "Dewpoint " + g + "F"
 
     # Find current wind direction
     b = a.find("forecast-view")
@@ -93,6 +110,7 @@ def get_current_readings():
     e = a.find("<", d)
     g = a[d+1:e]
     current_wind_direction = g
+    current_wind_direction_out = "Wind Direction " + g
 
     # Find current solar radiation
     b = a.find("list-summary-view")
@@ -102,18 +120,19 @@ def get_current_readings():
     e = a.find(" ", d)
     g = a[d+1:e]
     current_solar_radiation = g
+    current_solar_radiation_out = "Solar Radiation " + g + " w/m²"
 
-    print('Current Temperature', current_temperature, 'F')
-    print('Current Feels-Like Temperature', feels_like_temperature, 'F')
-    print('Current Dewpoint', current_dewpoint, 'F')
-    print('Current Pressure', current_pressure, 'in/hg')
-    print('Current Humidity', current_humidity, '%')
-    print('Current Wind Speed', current_wind_speed, 'MPH')
-    print('Current Wind Gust', current_wind_gust, 'MPH')
-    print('Current Wind Direction', current_wind_direction, '')
-    print('Current Total Precipitation', current_total_precipitation, 'in')
-    print('Current Total Precipitation Rate', current_total_precipitation_rate, 'in/hr')
-    print('Current Solar Radiation', current_solar_radiation, 'w/m²')
+    print(current_temperature_out)
+    print(current_feels_like_temperature_out)
+    print(current_dewpoint_out)
+    print(current_pressure_out)
+    print(current_humidity_out)
+    print(current_wind_speed_out)
+    print(current_wind_gust_out)
+    print(current_wind_direction_out)
+    print(current_total_precipitation_out)
+    print(current_total_precipitation_rate_out)
+    print(current_solar_radiation_out)
 
     return
 
