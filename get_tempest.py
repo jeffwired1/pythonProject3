@@ -122,16 +122,12 @@ def get_current_readings():
     current_solar_radiation = g
     current_solar_radiation_out = "Solar Radiation " + g + " w/m²"
 
-    print(current_temperature_out)
-    print(current_feels_like_temperature_out)
+    print(current_temperature_out, "\t", current_feels_like_temperature_out)
     print(current_dewpoint_out)
     print(current_pressure_out)
     print(current_humidity_out)
-    print(current_wind_speed_out)
-    print(current_wind_gust_out)
-    print(current_wind_direction_out)
-    print(current_total_precipitation_out)
-    print(current_total_precipitation_rate_out)
+    print(current_wind_speed_out, "\t", current_wind_gust_out, "\t", current_wind_direction_out)
+    print(current_total_precipitation_out, "\t", current_total_precipitation_rate_out)
     print(current_solar_radiation_out)
 
     return
