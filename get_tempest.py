@@ -14,9 +14,9 @@ def get_current_readings():
     # access HTML source code with page_source method
     a = driver.page_source
 
-    # text_file = open("sample.txt", "w")
-    # text_file.write(a)
-    # text_file.close()
+    text_file = open("sample.txt", "w")
+    text_file.write(a)
+    text_file.close()
 
     # print(a)
 
@@ -112,6 +112,16 @@ def get_current_readings():
     current_wind_direction = g
     current_wind_direction_out = "Wind Direction " + g
 
+    # Find current conditions
+    b = a.find("forecast-view")
+    c = a.find("conditions-str", b)
+    c = a.find("conditions", c)
+    d = a.find(">", c)
+    e = a.find("<", d)
+    g = a[d+1:e]
+    current_conditions = g
+    current_conditions_out = "Conditions " + g
+
     # Find current solar radiation
     b = a.find("list-summary-view")
     c = a.find("Solar Radiation", b)
@@ -122,13 +132,23 @@ def get_current_readings():
     current_solar_radiation = g
     current_solar_radiation_out = "Solar Radiation " + g + " w/m²"
 
+    # Find current UV Index
+    b = a.find("list-summary-view")
+    c = a.find("uv", b)
+    d = a.find(">", c)
+    e = a.find("<", d)
+    g = a[d+1:e]
+    current_uv_index = g
+    current_uv_index_out = "UV Index " + g
+
+    print(current_conditions_out)
     print(current_temperature_out, "\t", current_feels_like_temperature_out)
     print(current_dewpoint_out)
     print(current_pressure_out)
     print(current_humidity_out)
     print(current_wind_speed_out, "\t", current_wind_gust_out, "\t", current_wind_direction_out)
     print(current_total_precipitation_out, "\t", current_total_precipitation_rate_out)
-    print(current_solar_radiation_out)
+    print(current_solar_radiation_out, "\t", current_uv_index_out)
 
     return
 
