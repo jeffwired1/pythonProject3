@@ -1,6 +1,6 @@
-from get_tempest import get_current_readings
+from get_tempest import get_tempest
 
-get_current_readings()
+get_tempest()
 
 
 exit()

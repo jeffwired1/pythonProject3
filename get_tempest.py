@@ -8,7 +8,7 @@ options.add_argument("headless")
 driver = webdriver.Chrome(executable_path="C:/windows/chromedriver.exe", chrome_options=options)
 
 
-def get_current_readings():
+def get_tempest():
     driver.implicitly_wait(0.5)
     driver.get("https://tempestwx.com/station/84479/")
     # access HTML source code with page_source method
