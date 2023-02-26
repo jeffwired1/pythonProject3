@@ -14,9 +14,9 @@ def get_tempest():
     # access HTML source code with page_source method
     a = driver.page_source
 
-    # text_file = open("sample.txt", "w")
-    # text_file.write(a)
-    # text_file.close()
+    text_file = open("sample.txt", "w")
+    text_file.write(a)
+    text_file.close()
 
     # print(a)
 
