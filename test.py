@@ -1,28 +1,56 @@
 import numpy as np
-import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 
-# Define the four-variable function to generate data from
-def func(x1, x2, x3, x4):
-    return 2 + 3*x1 + 4*x2 + 5*x3 + 6*x4 + 7*x1**2 + 8*x2**2 + 9*x3**2 + 10*x4**2 + 11*x1*x2 + 12*x1*x3 + 13*x1*x4 + 14*x2*x3 + 15*x2*x4 + 16*x3*x4
+# Define the function that generates the data
+def func(x1, x2):
+    return 3 + 2*x1 + 4*x2 + 3*x1*x2
 
-# Generate data for x1, x2, x3, and x4
-x1 = 1,1,1,1,1
-x2 = 2,2,2,2,2
-x3 = 3,3,3,3,3
-x4 = 4,4,4,4,4
-x1, x2, x3, x4 = np.meshgrid(x1, x2, x3, x4)
+# Define the range for each variable
+x1_range = [-1, 1]
+x2_range = [-1, 1]
 
-# Generate corresponding y values using the function
-y = func(x1, x2, x3, x4)
+x1 = np.array([1, 1, 1, 1, 1,1,1,1,1])
+x2 = np.array([2, 2, 2, 2, 2,2,2,2,2])
+y = np.array([3, 3, 3, 3, 3,3,3,3,3])
 
-# Fit a quadratic response surface equation to the data
-X = np.column_stack((np.ones_like(x1.ravel()), x1.ravel(), x2.ravel(), x3.ravel(), x4.ravel(),
-                     x1.ravel()**2, x2.ravel()**2, x3.ravel()**2, x4.ravel()**2,
-                     x1.ravel()*x2.ravel(), x1.ravel()*x3.ravel(), x1.ravel()*x4.ravel(),
-                     x2.ravel()*x3.ravel(), x2.ravel()*x4.ravel(), x3.ravel()*x4.ravel()))
-p, _, _, _ = np.linalg.lstsq(X, y.ravel(), rcond=None)
+# Define the levels for the design
+alpha = 1  # distance from the center to each vertex of the hypercube
+star = 1.68  # distance from the center to each star point
+n = 5  # number of levels for each variable (excluding center points)
 
-# Print the response surface equation
-print('y = %.3f + %.3f*x1 + %.3f*x2 + %.3f*x3 + %.3f*x4 + %.3f*x1^2 + %.3f*x2^2 + %.3f*x3^2 + %.3f*x4^2 + %.3f*x1*x2 + %.3f*x1*x3 + %.3f*x1*x4 + %.3f*x2*x3 + %.3f*x2*x4 + %.3f*x3*x4' % tuple(p))
-print(x2)
+# Generate the design matrix
+x1c, x2c = np.meshgrid([-alpha, 0, alpha], [-alpha, 0, alpha])
+x1s, x2s = np.meshgrid([-star, 0, star], [-star, 0, star])
+X = np.column_stack([x1, x2, x1s.ravel(), x2s.ravel()])
 
+# Generate the response vector
+# y = func(*X.T)
+
+# Fit a quadratic response surface model
+def quad_func(X, a, b, c, d, e, f):
+    x1, x2, x1s, x2s = X.T
+    return a + b*x1 + c*x2 + d*x1**2 + e*x2**2 + f*x1*x2
+
+popt, pcov = curve_fit(quad_func, X, y)
+
+# Print the coefficients of the response surface equation
+print(f'Response surface equation: {popt[0]:.2f} + {popt[1]:.2f}x1 + {popt[2]:.2f}x2 + {popt[3]:.2f}x1^2 + {popt[4]:.2f}x2^2 + {popt[5]:.2f}x1*x2')
+print(popt)
+print(pcov)
+
+exit()
+
+
+
+x1 = np.array([1, 1, 1, 1, 1])
+x2 = np.array([2, 2, 2, 2, 2])
+y = np.array([3, 3, 3, 3, 3])
+
+# Generate the design matrix
+X = np.column_stack([x1, x2, x1s.ravel(), x2s.ravel()])
+
+# Fit a quadratic response surface model
+popt, pcov = curve_fit(quad_func, X, y)
+
+# Print the coefficients of the response surface equation
+print(f'Response surface equation: {popt[0]:.2f} + {popt[1]:.2f}x1 + {popt[2]:.2f}x2 + {popt[3]:.2f}x1^2 + {popt[4]:.2f}x2^2 + {popt[5]:.2f}x1*x2')
