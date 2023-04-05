@@ -71,8 +71,14 @@ l = model.predict(X_design)
 print(l)
 
 # Reshape the array to a column vector
-column_arr = l.reshape(-1, 1)
+# column_arr = l.reshape(-1, 1)
 
 # Save the array to a CSV file as a column
-np.savetxt('data.csv', column_arr, delimiter=',', fmt='%.8f')
+# np.savetxt('data.csv', column_arr, delimiter=',', fmt='%.8f')
+
+# Add the array as a second column to the data array
+data = np.column_stack((data, l))
+
+# Save the updated data array to the CSV file
+np.savetxt('data.csv', data, delimiter=',', fmt='%.8f')
 
