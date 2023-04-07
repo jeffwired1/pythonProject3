@@ -57,5 +57,8 @@ print(row, x1,x2,x3,x4,y)
 l = model.predict(X_design)
 print(l)
 
+# read by default 1st sheet of an excel file
+dataframe1 = pd.read_excel('data.xlsx')
 
+print(dataframe1)
 

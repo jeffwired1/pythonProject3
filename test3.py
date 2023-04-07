@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
+import xlrd
 
 # Define the data
 from sklearn.utils.extmath import safe_sparse_dot
