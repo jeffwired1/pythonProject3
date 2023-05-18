@@ -20,8 +20,6 @@ while 1:
     # Read RSE input and output values from configuration file
     x_values = read_column(config_path, 'Sheet1', 'RSE Inputs')
     y_values = read_column(config_path, 'Sheet1', 'RSE Outputs')
-    print(x_values)
-    print(y_values)
 
     # Clear arrays
     equation = []
