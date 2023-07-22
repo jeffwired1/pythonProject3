@@ -54,8 +54,8 @@ def get_forecast_data():
 
 forecast_data = get_forecast_data()
 if not forecast_data:
-    # print(json.dumps(forecast_data, indent=4))
     print("Failed to retrieve forecast data.")
+#  print(json.dumps(forecast_data, indent=4))
 
 
 weatherflow_timestamp = forecast_data["current_conditions"]["time"]
@@ -68,9 +68,12 @@ print(time_of_day)
 
 # Access the daily forecast
 value = forecast_data["forecast"]["daily"]
+value = forecast_data["forecast"]["hourly"]
+
+# print(value)
 
 # individual_dicts = {}
-size = 10  # Size of the array
+size = 240  # Size of the array
 value2 = 0  # Initial value of the array elements
 forecast_array = [value2] * size
 
@@ -80,8 +83,14 @@ for item in value:
     x = x + 1
 
 for item in forecast_array:
-    print(item)
+    if item != 0:
+        b = item["conditions"]
+        print(b)
+        print(item)
 
-d = forecast_array[9]["air_temp_low"]
-print(d)
+#d = forecast_array[9]["day_start_local"]
+#dt = datetime.fromtimestamp(d)
+#date = dt.strftime("%m-%d-%Y")
+#time = dt.strftime("%I:%M:%S %p")
+#print(date,time)
 
