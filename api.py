@@ -84,8 +84,11 @@ for item in value:
 
 for item in forecast_array:
     if item != 0:
-        b = item["conditions"]
-        print(b)
+        d = item["time"]
+        dt = datetime.fromtimestamp(d)
+        date = dt.strftime("%m-%d-%Y")
+        time = dt.strftime("%I:%M:%S %p")
+        print(date,time)
         print(item)
 
 #d = forecast_array[9]["day_start_local"]
