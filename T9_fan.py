@@ -11,15 +11,11 @@ params = {
 }
 
 json_data = {
-    'mode': 'Auto',
-    'heatSetpoint': 62,
-    'coolSetpoint': 77,
-    'autoChangeoverActive': True,
-    'thermostatSetpointStatus': 'NoHold',
+    'mode': 'Circulate',
 }
 
 response = requests.post(
-    'https://api.honeywell.com/v2/devices/thermostats/LCC-48A2E62503BD',
+    'https://api.honeywell.com/v2/devices/thermostats/LCC-48A2E62503BD/fan',
     params=params,
     headers=headers,
     json=json_data,
