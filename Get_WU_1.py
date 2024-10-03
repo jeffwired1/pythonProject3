@@ -1,77 +1,37 @@
+
+
+#https://api.weather.com/v3/wx/forecast/daily/5day?postalKey=81657:US&units=e&language=en-US&format=json&apiKey=yourApiKey
+
+
 import requests
-import pandas as pd
-from dateutil import parser, rrule
-from datetime import datetime, time, date
-import time
+
+def get_weather(api_key, city, state):
+    url = "https://api.weather.com/v3/wx/forecast/daily/5day?postalKey=81657:US&units=e&language=en-US&format=json&apiKey=8063d0e05c6478f863d0e05c6e78fbb"
+    response = requests.get(url)
+    data = response.json()
+
+    print(data)
+
+    current_observation = data["metadata"]
+
+    print(current_observation)
+
+    data_list = eval(str(current_observation))
+    data_dict = data_list[0]
 
 
-def getRainfallData(station, day, month, year):
-    """
-    Function to return a data frame of minute-level weather data for a single Wunderground PWS station.
-    Args:
-        station (string): Station code from the Wunderground website
-        day (int): Day of month for which data is requested
-        month (int): Month for which data is requested
-        year (int): Year for which data is requested
-    Returns:
-        Pandas Dataframe with weather data for specified station and date.
-    """
-    url = "http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID={station}&day={day}&month={month}&year={year}&graphspan=day&format=1"
-    full_url = url.format(station=station, day=day, month=month, year=year)
+    # Extract temperature and humidity
+    temperature_fahrenheit = data_dict['imperial']['temp']
+    humidity_percent = data_dict['humidity']
 
-    # Request data from wunderground
-    response = requests.get(full_url, headers={'User-agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'})
-    data = response.text
-
-    # Remove the excess <br> from the text data
-    data = data.replace('<br>', '')
-
-    # Convert to pandas dataframe (fails if issues with weather station)
-    try:
-        dataframe = pd.read_csv(io.StringIO(data), index_col=False)
-        dataframe['station'] = station
-    except Exception as e:
-        print("Issue with date: {}-{}-{} for station {}".format(day, month, year, station))
-        return None
-
-    return dataframe
+    print("Temperature:",temperature_fahrenheit,"°F")
+    print(f"Humidity: {humidity_percent}%")
 
 
-# Generate a list of all of the dates we want data for
-start_date = "2024-04-01"
-end_date = "2024-04-30"
-start = parser.parse(start_date)
-end = parser.parse(end_date)
-dates = list(rrule.rrule(rrule.DAILY, dtstart=start, until=end))
 
-# Create a list of stations here to download data for
-stations = ["KCALAGUN1276"]
 
-# Set a backoff time in seconds if a request fails
-backoff_time = 10
-
-data = {}
-
-# Gather data for each station in turn and save to CSV
-for station in stations:
-    print("Working on {}".format(station))
-    data[station] = []
-    for date in dates:
-        # Print period status update messages
-        if date.day % 10 == 0:
-            print("Working on date: {} for station {}".format(date, station))
-        done = False
-        while done == False:
-            try:
-                weather_data = getRainfallData(station, date.day, date.month, date.year)
-                done = True
-            except ConnectionError as e:
-                # May get rate limited by Wunderground.com, backoff if so.
-                print("Got connection error on {}".format(date))
-                print("Will retry in {} seconds".format(backoff_time))
-                time.sleep(10)
-        # Add each processed date to the overall data
-        data[station].append(weather_data)
-
-# Finally combine all of the individual days and output to CSV for analysis.
-pd.concat(data[station]).to_csv("data/{}_weather.csv".format(station))
+if __name__ == "__main__":
+    api_key = "f8063d0e05c6478f863d0e05c6e78fbb"
+    city = "San Francisco"
+    state = "CA"
+    get_weather(api_key, city, state)

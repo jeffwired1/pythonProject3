@@ -6,8 +6,6 @@ def get_weather(api_key, city, state):
     response = requests.get(url)
     data = response.json()
 
-    #print(data)
-
     current_observation = data["observations"]
 
     print(current_observation)
@@ -15,11 +13,12 @@ def get_weather(api_key, city, state):
     data_list = eval(str(current_observation))
     data_dict = data_list[0]
 
+
     # Extract temperature and humidity
     temperature_fahrenheit = data_dict['imperial']['temp']
     humidity_percent = data_dict['humidity']
 
-    print(f"Temperature: {temperature_fahrenheit}°F")
+    print("Temperature:",temperature_fahrenheit,"°F")
     print(f"Humidity: {humidity_percent}%")
 
 
