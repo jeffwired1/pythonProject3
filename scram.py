@@ -22,7 +22,7 @@ def process_binary_file(file_path, shift, mode):
 
 
 # Example usage
-file_path = 'ret1.zip'
+file_path = 'ret2.pdf'
 shift = 3
 mode = 'descramble'  # Change to 'descramble' to reverse
 process_binary_file(file_path, shift, mode)
