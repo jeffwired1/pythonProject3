@@ -1,6 +1,5 @@
 import socket
 import datetime
-import pytz
 
 
 def get_nist_time():
@@ -23,25 +22,12 @@ def get_nist_time():
     unix_timestamp = timestamp - 2208988800
 
     # Convert the Unix timestamp to a datetime object
-    nist_time_utc = datetime.datetime.utcfromtimestamp(unix_timestamp)
+    nist_time = datetime.datetime.utcfromtimestamp(unix_timestamp)
 
-    return nist_time_utc
-
-
-def convert_to_pst(utc_time):
-    # Define the PST timezone
-    pst_timezone = pytz.timezone('US/Pacific')
-
-    # Convert the UTC time to PST
-    pst_time = utc_time.replace(tzinfo=pytz.utc).astimezone(pst_timezone)
-
-    return pst_time
+    return nist_time
 
 
-# Get the current time from NIST in UTC
-current_time_utc = get_nist_time()
-# Convert the UTC time to PST
-current_time_pst = convert_to_pst(current_time_utc)
+# Get the current time from NIST and print it
+current_time = get_nist_time()
+print("Current time from NIST:", current_time)
 
-print("Current time from NIST (UTC):", current_time_utc)
-print("Current time in PST:", current_time_pst)
