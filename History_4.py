@@ -1,0 +1,61 @@
+import requests
+from datetime import datetime, timedelta
+import csv
+
+# ----- User inputs -----
+device_id = '222373'  # Replace with your actual device ID
+token = '6d2447ce-f577-4896-bf2a-be8711735398'  # Replace with your actual token
+start_date_str = '2025-06-15'  # Start date (inclusive)
+end_date_str = '2025-06-18'    # End date (inclusive)
+
+# ----- Date setup -----
+start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+delta = timedelta(days=1)
+
+# ----- Output file setup -----
+filename = 'tempest_log.csv'
+with open(filename, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow([
+        'Date', 'Time (UTC)', 'Temperature (°C)', 'Humidity (%)',
+        'Pressure (mb)', 'Wind Avg (m/s)', 'Rain (mm)'
+    ])
+
+    # ----- Loop over each day -----
+    current = start_date
+    while current <= end_date:
+        day_str = current.strftime('%Y-%m-%d')
+        from_time = f"{day_str}T00:00:00Z"
+        to_time = f"{day_str}T23:59:59Z"
+
+        url = (
+            f"https://swd.weatherflow.com/swd/rest/observations/device/{device_id}"
+            f"?token={token}&from={from_time}&to={to_time}"
+        )
+        print(url)
+        response = requests.get(url)
+        data = response.json()
+
+        if response.status_code == 200:
+            for obs in data.get('obs', []):
+                print(obs[0])
+                timestamp = datetime.utcfromtimestamp(obs[0])
+                temp_c = obs[7]
+                humidity = obs[8]
+                pressure = obs[6]
+                wind_avg = obs[2]
+                rain_mm = obs[12]
+
+                writer.writerow([
+                    day_str, timestamp.strftime('%H:%M:%S'),
+                    f"{temp_c:.1f}", f"{humidity}", f"{pressure}",
+                    f"{wind_avg}", f"{rain_mm}"
+                ])
+            print(f"Logged data for {day_str}")
+        else:
+            print(f"Failed to fetch data for {day_str}: {response.status_code}")
+
+        current += delta
+
+print(f"\nAll done! Data saved to {filename}")
