@@ -3,9 +3,11 @@ from datetime import datetime, timedelta
 import csv
 from datetime import date
 
-today_str = date.today()
+today = date.today()
+today_str = today.strftime("%Y-%m-%d")
+
 print("Today's date is:", today_str)
-today_str = '2025-06-19'
+# today_str = '2025-06-19'
 
 # ----- User inputs -----
 device_id = '222373'  # Replace with your actual device ID
@@ -58,7 +60,8 @@ with open(filename, mode='w', newline='') as file:
                 rain_mm = obs[12]
 
                 writer.writerow([
-                    day_str, timestamp.strftime('%H:%M:%S'),
+                    # day_str, timestamp.strftime('%H:%M:%S'),
+                    timestamp,
                     f"{temp_c:.1f}", f"{humidity}", f"{pressure}",
                     f"{wind_avg}", f"{rain_mm}"
                 ])
