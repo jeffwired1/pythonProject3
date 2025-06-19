@@ -1,0 +1,23 @@
+Great question, Jeff. In the Tempest API, the obs section returns an array of weather observation values in a specific order—each index corresponds to a different parameter. For a Tempest device (obs_st), here’s what each index represents:
+0- Timestamp (Epoch, UTC)
+1- Wind lull (m/s)
+2- Wind average (m/s)
+3- Wind gust (m/s)
+4- Wind direction (degrees)
+5- Wind sample interval (seconds)
+6- Pressure (mb)
+7- Air temperature (°C)
+8- Relative humidity (%)
+9- Illuminance (lux)
+10- UV index
+11- Solar radiation (W/m²)
+12- Rain accumulation during interval (mm)
+13- Precipitation type (0 = none, 1 = rain, 2 = hail, 3 = rain + hail)
+14- Lightning average distance (km)
+15- Lightning strike count
+16- Battery voltage (V)
+17- Reporting interval (minutes)
+18- Local day rain accumulation (mm)
+19- Nearcast rain accumulation (mm)
+20- Local day Nearcast rain accumulation (mm)
+21- Precipitation analysis type (0 = none, 1 = Nearcast w/ display on, 2 = Nearcast w/ display off
