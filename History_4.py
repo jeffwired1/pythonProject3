@@ -9,8 +9,9 @@ today_str = today.strftime("%Y-%m-%d")
 # ----- User inputs -----
 device_id = '222373'  # Replace with your actual device ID
 token = '6d2447ce-f577-4896-bf2a-be8711735398'  # Replace with your actual token
-start_date_str = '2025-06-15'  # Start date (inclusive)
-end_date_str = '2025-06-19'    # End date (inclusive)
+start_date_str = '2025-01-01'  # Start date (inclusive)
+end_date_str = '2025-06-22'    # End date (inclusive)
+detail_file = 1     # Write out minute by minute data
 
 # ----- Date setup -----
 start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
@@ -19,21 +20,26 @@ today_date = datetime.strptime(today_str, '%Y-%m-%d')
 delta = timedelta(days=1)
 offset_days = (today_date - end_date).days
 
-# ----- Output file setup -----
+# ----- Log Output file setup -----
 filename = 'tempest_log.csv'
-with open(filename, mode='w', newline='') as file:
+filename1 = 'tempest_log_maxmin.csv'
+with open(filename, mode='w', newline='') as file, open(filename1, mode='w', newline='') as file1:
     writer = csv.writer(file)
     writer.writerow([
         'Date', 'Time (UTC)', 'Temperature (°F)', 'Humidity (%)',
         'Pressure (inHg)', 'Wind Avg (m/s)', 'Rain (in)',
-        'Battery Voltage (V)',
+        'Battery Voltage (V)', 'Heat_index (°F)', 'Indicator',
+    ])
+    writer1 = csv.writer(file1)
+    writer1.writerow([
+        'Date', 'Heat Index Max (°F)', 'Heat Index Min (°F)', 'Indicator'
     ])
 
     # ----- Loop over each day -----
     current = end_date
     offset = offset_days
     while current >= start_date:
-        # day_str = current.strftime('%Y-%m-%d')
+        day_str = current.strftime('%Y-%m-%d')
         # from_time = f"{day_str}T00:00:00Z"
         # to_time = f"{day_str}T23:59:59Z"
 
@@ -47,6 +53,8 @@ with open(filename, mode='w', newline='') as file:
         data = response.json()
 
         if response.status_code == 200:
+            temp_max = 0
+            temp_min = 200
             for obs in data.get('obs', []):
                 timestamp = datetime.utcfromtimestamp(obs[0])
                 temp_f = (obs[7] * (9 / 5)) + 32
@@ -56,16 +64,38 @@ with open(filename, mode='w', newline='') as file:
                 rain_in = obs[12] / 25.4
                 battery_voltage = obs[16]
 
-                writer.writerow([
-                    timestamp.date(), timestamp.strftime('%H:%M:%S'),
-                    # timestamp,
-                    f"{temp_f:.1f}", f"{humidity:.0f}", f"{pressure:.2f}",
-                    f"{wind_avg:.2f}", f"{rain_in:.5f}", f"{battery_voltage:.2f}",
-                ])
-            print(f"Logged data for {timestamp.date()}")
+                T = temp_f
+                RH = humidity
+                if temp_f >80 and humidity > 40:
+                    heat_index = (-42.379 + 2.04901523 * T + 10.14333127 * RH
+                            - 0.22475541 * T * RH - 0.00683783 * T**2
+                            - 0.05481717 * RH**2 + 0.00122874 * T**2 * RH
+                            + 0.00085282 * T * RH**2 - 0.00000199 * T**2 * RH**2)
+                    indicator = 1
+                else:
+                    heat_index = temp_f
+                    indicator = 0
+
+                if temp_max <= heat_index:
+                    temp_max = heat_index
+                if heat_index <= temp_min:
+                    temp_min = heat_index
+
+                if detail_file == 1:
+                    writer.writerow([
+                        timestamp.date(), timestamp.strftime('%H:%M:%S'),
+                        f"{temp_f:.1f}", f"{humidity:.0f}", f"{pressure:.2f}",
+                        f"{wind_avg:.2f}", f"{rain_in:.5f}", f"{battery_voltage:.2f}", f"{heat_index:.1f}",
+                        indicator,
+                    ])
+
+            print(f"Data saved for {timestamp.date()}: Server status code = {response.status_code} = Data Valid!")
         else:
             print(f"Failed to fetch data for {day_str}: {response.status_code}")
 
+        writer1.writerow([
+            timestamp.date(), f"{temp_max:.1f}", f"{temp_min:.1f}", indicator,
+        ])
         current -= delta
         offset += 1
 
