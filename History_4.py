@@ -9,8 +9,8 @@ today_str = today.strftime("%Y-%m-%d")
 # ----- User inputs -----
 device_id = '222373'  # Replace with your actual device ID
 token = '6d2447ce-f577-4896-bf2a-be8711735398'  # Replace with your actual token
-start_date_str = '2025-01-01'  # Start date (inclusive)
-end_date_str = '2025-06-22'    # End date (inclusive)
+start_date_str = '2023-01-01'  # Start date (inclusive)
+end_date_str = '2023-12-31'    # End date (inclusive)
 detail_file = 1     # Write out minute by minute data
 
 # ----- Date setup -----
@@ -59,7 +59,9 @@ with open(filename, mode='w', newline='') as file, open(filename1, mode='w', new
                 timestamp = datetime.utcfromtimestamp(obs[0])
                 temp_f = (obs[7] * (9 / 5)) + 32
                 humidity = obs[8]
-                pressure = (obs[6] * 0.02953)
+                pressure = 0
+                if obs[6] != None:
+                    pressure = (obs[6] * 0.02953)
                 wind_avg = obs[2]
                 rain_in = obs[12] / 25.4
                 battery_voltage = obs[16]
