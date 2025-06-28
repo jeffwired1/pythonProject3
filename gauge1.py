@@ -1,52 +1,79 @@
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
+import tkinter as tk
+import math
 
-# Define gauge parameters
-value = 65  # Value to display on the gauge
-max_value = 100  # Maximum value of the gauge
-units = "%"  # Units for the value label
+def draw_needle(canvas, angle_deg, center_x, center_y, length, width=8):
+    canvas.delete("needle")
+    angle_rad = math.radians(angle_deg)
 
-# Configure gauge dimensions
-gauge_radius = 0.4
-needle_length = 0.7
+    # Needle tip
+    tip_x = center_x + length * math.cos(angle_rad)
+    tip_y = center_y - length * math.sin(angle_rad)
 
-# Calculate angles
-angle_range = 360
-min_angle = 0
-max_angle = angle_range - 1
-current_angle = min_angle + (value / max_value) * angle_range
+    # Perpendicular for base width
+    perp_angle = math.radians(angle_deg + 90)
+    base_left_x = center_x + width * math.cos(perp_angle)
+    base_left_y = center_y - width * math.sin(perp_angle)
+    base_right_x = center_x - width * math.cos(perp_angle)
+    base_right_y = center_y + width * math.sin(perp_angle)
 
-# Create figure and axis
-fig, ax = plt.subplots()
+    # Draw triangular pointer
+    canvas.create_polygon(
+        base_left_x, base_left_y,
+        base_right_x, base_right_y,
+        tip_x, tip_y,
+        fill="red", tag="needle"
+    )
 
-# Create gauge arc
-arc = matplotlib.patches.Arc((0.5, 0.5), gauge_radius, gauge_radius, angle = 0,
-                             theta1 = min_angle, theta2 = max_angle,
-                             linewidth = 2, color='lightgray')
+def update_gauge(value):
+    value = float(value)
+    angle = 180 - (value / 100) * 180
+    draw_needle(canvas, angle, 150, 150, 100)
+    print(f"Gauge value: {value:.1f}")
 
-# Create needle
-needle_start_x = 0.5
-needle_start_y = 0.5
-needle_end_x = 0.5 + needle_length * np.cos(np.radians(current_angle))
-needle_end_y = 0.5 + needle_length * np.sin(np.radians(current_angle))
+def draw_ticks(canvas, center_x, center_y, radius, interval, length, draw_labels=False):
+    for val in range(0, 101, interval):
+        angle_deg = 180 - (val / 100) * 180
+        angle_rad = math.radians(angle_deg)
 
-needle = matplotlib.patches.FancyArrowPatch((needle_start_x, needle_start_y),
-                                         (needle_end_x, needle_end_y),
-                                         mutation_scale=100, color='royalblue')
+        x_start = center_x + (radius - length) * math.cos(angle_rad)
+        y_start = center_y - (radius - length) * math.sin(angle_rad)
+        x_end = center_x + radius * math.cos(angle_rad)
+        y_end = center_y - radius * math.sin(angle_rad)
+        canvas.create_line(x_start, y_start, x_end, y_end)
 
-# Add elements to the axis
-ax.add_patch(arc)
-ax.add_patch(needle)
+        if draw_labels:
+            label_radius = radius + 15
+            label_x = center_x + label_radius * math.cos(angle_rad)
+            label_y = center_y - label_radius * math.sin(angle_rad)
+            canvas.create_text(label_x, label_y, text=str(val), font=("Arial", 8), anchor="center")
 
-# Set labels and limits
-ax.set_aspect("equal")
-ax.set_xlabel(units)
-ax.set_xlim([0.5 - gauge_radius - gauge_radius/5, 0.5 + gauge_radius + gauge_radius/5])
-ax.set_ylim([0.5 - gauge_radius - gauge_radius/5, 0.5 + gauge_radius + gauge_radius/5])
+def loop_update():  # This loop contains the code to run at schedueled intervals
+    print("1", end="", flush=True)
+    root.after(500, loop_update)  # Schedule next update in 500 ms
 
-# Display the gauge value
-ax.text(0.5, 0.85, f"{value:.2f}", ha="center", va="center", fontsize=16)
+root = tk.Tk()
+root.title("Pointed Needle Gauge")
 
-# Show the gauge
-plt.show()
+canvas = tk.Canvas(root, width=300, height=200)
+canvas.pack()
+
+# Thicker arc
+canvas.create_arc(50, 50, 250, 250, start=0, extent=180, style=tk.ARC, width=4)
+
+# Major ticks and labels
+draw_ticks(canvas, 150, 150, 100, interval=10, length=10, draw_labels=True)
+
+# Minor ticks
+draw_ticks(canvas, 150, 150, 100, interval=5, length=5, draw_labels=False)
+
+# Initial needle
+draw_needle(canvas, 180, 150, 150, 100)
+
+# Slider
+scale = tk.Scale(root, from_=0, to=100, orient=tk.HORIZONTAL, command=update_gauge)
+scale.pack()
+
+loop_update()  # Trigger the continuous running code
+root.mainloop()
+print("")  # Line feed
+print("Exit")  # Exit message
