@@ -4,9 +4,18 @@ import csv
 from datetime import date
 import tkinter as tk
 from tkinter import simpledialog
+from tkinter import messagebox
 
 root = tk.Tk()
 root.withdraw()  # Hide the main window
+
+def confirm_action():
+    answer = messagebox.askyesno(title="Confirmation", message=f"Start Date = {start_date_str}\n"
+                                                               f"End Date = {end_date_str}")
+    if answer:
+        print("User confirmed.")
+    else:
+        print("User canceled.")
 
 start_date_str = simpledialog.askstring("Input", "Enter Start Date as yyyy-mm-dd")
 print(f"Start Date = {start_date_str}")
@@ -29,6 +38,10 @@ end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
 today_date = datetime.strptime(today_str, '%Y-%m-%d')
 delta = timedelta(days=1)
 offset_days = (today_date - end_date).days
+number_days = (end_date - start_date).days + 1
+print(f"Number of Days = {number_days}")
+
+confirm_action()
 
 # ----- Log Output file setup -----
 filename = 'tempest_log.csv'

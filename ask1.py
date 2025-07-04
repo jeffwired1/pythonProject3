@@ -1,8 +1,17 @@
 import tkinter as tk
-from tkinter import simpledialog
+from tkinter import messagebox
+
+def confirm_action():
+    answer = messagebox.askyesno(title="Confirmation", message="Are you sure?")
+    if answer:
+        print("User confirmed.")
+    else:
+        print("User canceled.")
 
 root = tk.Tk()
-root.withdraw()  # Hide the main window
+root.geometry("200x100")
 
-user_input = simpledialog.askstring("Input", "What's your name?")
-print(f"Hello, {user_input}!")
+btn = tk.Button(root, text="Do Something", command=confirm_action)
+btn.pack(pady=20)
+
+root.mainloop()
