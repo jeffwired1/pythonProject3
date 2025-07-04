@@ -2,6 +2,16 @@ import requests
 from datetime import datetime, timedelta
 import csv
 from datetime import date
+import tkinter as tk
+from tkinter import simpledialog
+
+root = tk.Tk()
+root.withdraw()  # Hide the main window
+
+start_date_str = simpledialog.askstring("Input", "Enter Start Date as yyyy-mm-dd")
+print(f"Start Date = {start_date_str}")
+end_date_str = simpledialog.askstring("Input", "Enter End Date as yyyy-mm-dd")
+print(f"End Date = {end_date_str}")
 
 today = date.today()
 today_str = today.strftime("%Y-%m-%d")
@@ -9,8 +19,8 @@ today_str = today.strftime("%Y-%m-%d")
 # ----- User inputs -----
 device_id = '222373'  # Replace with your actual device ID
 token = '6d2447ce-f577-4896-bf2a-be8711735398'  # Replace with your actual token
-start_date_str = '2023-01-01'  # Start date (inclusive)
-end_date_str = '2023-12-31'    # End date (inclusive)
+# start_date_str = '2023-12-29'  # Start date (inclusive)
+# end_date_str = '2023-12-31'    # End date (inclusive)
 detail_file = 1     # Write out minute by minute data
 
 # ----- Date setup -----
