@@ -12,7 +12,7 @@ class MultiFieldDialog1(simpledialog.Dialog):
     def body(self, master):
         self.big_font = font.Font(family="Helvetica", size=14)
 
-        # Name
+        # Confirmation dialog box
         tk.Label(master, text=f"Start Date = {start_date_str}\n"
                               f"End Date = {end_date_str}\n"
                               f"{number_days} days to be processed\n"
@@ -20,25 +20,24 @@ class MultiFieldDialog1(simpledialog.Dialog):
                               f"Continue?",
                  font=self.big_font).grid(row=0, column=0, sticky="w", padx=10, pady=5)
 
-
 class MultiFieldDialog(simpledialog.Dialog):
     def body(self, master):
         self.big_font = font.Font(family="Helvetica", size=14)
 
-        # Name
-        tk.Label(master, text="Start Date as yyyy-mm-dd:", font=self.big_font).grid(row=0, column=0, sticky="w", padx=10, pady=5)
+        # Start Date
+        tk.Label(master, text="Start Date as YYYY-MM-DD:", font=self.big_font).grid(row=0, column=0, sticky="w", padx=10, pady=5)
         self.start_entry = tk.Entry(master, font=self.big_font)
-        self.start_entry.grid(row=0, column=1, padx=10, pady=5)
+        self.start_entry.grid(row=0, column=1, padx=10, pady=15)
 
-        # Email
-        tk.Label(master, text="End Date as yyyy-mm-dd:", font=self.big_font).grid(row=1, column=0, sticky="w", padx=10, pady=5)
+        # End Date
+        tk.Label(master, text="End Date as YYYY-MM-DD:", font=self.big_font).grid(row=1, column=0, sticky="w", padx=10, pady=5)
         self.end_entry = tk.Entry(master, font=self.big_font)
-        self.end_entry.grid(row=1, column=1, padx=10, pady=5)
+        self.end_entry.grid(row=1, column=1, padx=10, pady=15)
 
         # Age
-        tk.Label(master, text="Age:", font=self.big_font).grid(row=2, column=0, sticky="w", padx=10, pady=5)
-        self.age_entry = tk.Entry(master, font=self.big_font)
-        self.age_entry.grid(row=2, column=1, padx=10, pady=5)
+        #tk.Label(master, text="Age:", font=self.big_font).grid(row=2, column=0, sticky="w", padx=10, pady=5)
+        #self.age_entry = tk.Entry(master, font=self.big_font)
+        #self.age_entry.grid(row=2, column=1, padx=10, pady=5)
 
         return self.start_entry  # initial focus
 
@@ -46,7 +45,7 @@ class MultiFieldDialog(simpledialog.Dialog):
         self.result = {
             "start": self.start_entry.get(),
             "end": self.end_entry.get(),
-            "age": self.age_entry.get()
+            #"age": self.age_entry.get()
         }
 
 root = tk.Tk()
@@ -62,22 +61,6 @@ if dialog.result:
         print(f"{key.capitalize()}: {value}")
 else:
     sys.exit(0)  # 0 means successful termination
-
-
-print(start_date_str)
-print(end_date_str)
-
-#start_date_str = simpledialog.askstring("Input", "Enter Start Date as yyyy-mm-dd")
-#if start_date_str:
-#    print(f"Start Date = {start_date_str}")
-#else:
-#    sys.exit(0)  # 0 means successful termination
-
-#end_date_str = simpledialog.askstring("Input", "Enter End Date as yyyy-mm-dd")
-#if end_date_str:
-#    print(f"Start Date = {end_date_str}")
-#else:
-#    sys.exit(0)  # 0 means successful termination
 
 today = date.today()
 today_str = today.strftime("%Y-%m-%d")
@@ -99,11 +82,6 @@ number_days = (end_date - start_date).days + 1
 print(f"Number of Days = {number_days}")
 
 continue_1 = MultiFieldDialog1(root, title="User Data Entry1")
-#continue_1 = messagebox.askyesno(title="Confirmation", message=f"Start Date = {start_date_str}\n"
-#                                                           f"End Date = {end_date_str}\n"
-#                                                           f"{number_days} days to be processed\n"
-#                                                           f"\n"
-#                                                           f"Continue?")
 if continue_1:
     print("Processing Data")
 else:
