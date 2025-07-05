@@ -1,49 +1,50 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+import tkinter as tk
+from math import pi, cos, sin, radians
 
-# Copyright (c) 2009, Giampaolo Rodola'. All rights reserved.
-# Use of this source code is governed by a BSD-style license that can be
-# found in the LICENSE file.
+class Gauge(tk.Canvas):
+    def __init__(self, master, size=200, max_value=100, value=70, **kwargs):
+        super().__init__(master, width=size, height=size, bg='white', highlightthickness=0, **kwargs)
+        self.size = size
+        self.center = size // 2
+        self.radius = size * 0.4
+        self.max_value = max_value
+        self.value = value
+        self.draw_gauge()
 
-"""A clone of 'sensors' utility on Linux printing hardware temperatures.
+    def draw_gauge(self):
+        self.delete("all")
+        # Draw background arc
+        self.create_arc(self.center - self.radius, self.center - self.radius,
+                        self.center + self.radius, self.center + self.radius,
+                        start=135, extent=270, style='arc', width=20, outline="#ccc")
 
-$ python3 scripts/sensors.py
-asus
-    asus                 47.0 °C (high = None °C, critical = None °C)
+        # Draw value arc
+        extent = (self.value / self.max_value) * 270
+        self.create_arc(self.center - self.radius, self.center - self.radius,
+                        self.center + self.radius, self.center + self.radius,
+                        start=135, extent=extent, style='arc', width=20, outline="#4CAF50")
 
-acpitz
-    acpitz               47.0 °C (high = 103.0 °C, critical = 103.0 °C)
+        # Draw needle
+        angle_deg = 135 + extent
+        angle_rad = radians(angle_deg)
+        needle_length = self.radius * 0.9
+        end_x = self.center + needle_length * cos(angle_rad)
+        end_y = self.center - needle_length * sin(angle_rad)
+        self.create_line(self.center, self.center, end_x, end_y, width=4, fill="red")
 
-coretemp
-    Physical id 0        54.0 °C (high = 100.0 °C, critical = 100.0 °C)
-    Core 0               47.0 °C (high = 100.0 °C, critical = 100.0 °C)
-    Core 1               48.0 °C (high = 100.0 °C, critical = 100.0 °C)
-    Core 2               47.0 °C (high = 100.0 °C, critical = 100.0 °C)
-    Core 3               54.0 °C (high = 100.0 °C, critical = 100.0 °C)
-"""
+        # Center dot
+        self.create_oval(self.center - 6, self.center - 6, self.center + 6, self.center + 6,
+                         fill="#4CAF50", outline='')
 
-from __future__ import print_function
+        # Value label
+        self.create_text(self.center, self.center + self.radius / 2, text=f"{self.value:.0f}",
+                         font=("Helvetica", 20, "bold"), fill="#333")
 
-import sys
+# Usage
+root = tk.Tk()
+root.title("Gauge with Needle")
+gauge = Gauge(root, size=300, value=65)
+gauge.pack(padx=20, pady=20)
+root.mainloop()
 
-import psutil
-
-
-def main():
-    if not hasattr(psutil, "sensors_temperatures"):
-        sys.exit("platform not supported")
-    temps = psutil.sensors_temperatures()
-    if not temps:
-        sys.exit("can't read any temperature")
-    for name, entries in temps.items():
-        print(name)
-        for entry in entries:
-            print("    %-20s %s °C (high = %s °C, critical = %s °C)" % (
-                entry.label or name, entry.current, entry.high,
-                entry.critical))
-        print()
-
-
-if __name__ == '__main__':
-    main()
 

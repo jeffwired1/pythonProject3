@@ -25,12 +25,12 @@ class MultiFieldDialog(simpledialog.Dialog):
         self.big_font = font.Font(family="Helvetica", size=14)
 
         # Start Date
-        tk.Label(master, text="Start Date as YYYY-MM-DD:", font=self.big_font).grid(row=0, column=0, sticky="w", padx=10, pady=5)
+        tk.Label(master, text="Start Date as MM-DD-YYYY:", font=self.big_font).grid(row=0, column=0, sticky="w", padx=10, pady=5)
         self.start_entry = tk.Entry(master, font=self.big_font)
         self.start_entry.grid(row=0, column=1, padx=10, pady=15)
 
         # End Date
-        tk.Label(master, text="End Date as YYYY-MM-DD:", font=self.big_font).grid(row=1, column=0, sticky="w", padx=10, pady=5)
+        tk.Label(master, text="End Date as MM-DD-YYYY:", font=self.big_font).grid(row=1, column=0, sticky="w", padx=10, pady=5)
         self.end_entry = tk.Entry(master, font=self.big_font)
         self.end_entry.grid(row=1, column=1, padx=10, pady=15)
 
@@ -63,7 +63,7 @@ else:
     sys.exit(0)  # 0 means successful termination
 
 today = date.today()
-today_str = today.strftime("%Y-%m-%d")
+today_str = today.strftime("%m-%d-%Y")
 
 # ----- User inputs -----
 device_id = '222373'  # Replace with your actual device ID
@@ -73,9 +73,9 @@ token = '6d2447ce-f577-4896-bf2a-be8711735398'  # Replace with your actual token
 detail_file = 1     # Write out minute by minute data
 
 # ----- Date setup -----
-start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
-end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
-today_date = datetime.strptime(today_str, '%Y-%m-%d')
+start_date = datetime.strptime(start_date_str, '%m-%d-%Y')
+end_date = datetime.strptime(end_date_str, '%m-%d-%Y')
+today_date = datetime.strptime(today_str, '%m-%d-%Y')
 delta = timedelta(days=1)
 offset_days = (today_date - end_date).days
 number_days = (end_date - start_date).days + 1
@@ -106,7 +106,7 @@ with open(filename, mode='w', newline='') as file, open(filename1, mode='w', new
     current = end_date
     offset = offset_days
     while current >= start_date:
-        day_str = current.strftime('%Y-%m-%d')
+        day_str = current.strftime('%m-%d-%Y')
         # from_time = f"{day_str}T00:00:00Z"
         # to_time = f"{day_str}T23:59:59Z"
 
@@ -152,18 +152,19 @@ with open(filename, mode='w', newline='') as file, open(filename1, mode='w', new
 
                 if detail_file == 1:
                     writer.writerow([
-                        timestamp.date(), timestamp.strftime('%H:%M:%S'),
+                        timestamp.date().strftime('%m-%d-%Y'), timestamp.strftime('%H:%M:%S'),
                         f"{temp_f:.1f}", f"{humidity:.0f}", f"{pressure:.2f}",
                         f"{wind_avg:.2f}", f"{rain_in:.5f}", f"{battery_voltage:.2f}", f"{heat_index:.1f}",
                         indicator,
                     ])
 
-            print(f"Data saved for {timestamp.date()}: Server status code = {response.status_code} = Data Valid!")
+            print(f"Data saved for {timestamp.date().strftime('%m-%d-%Y')}: "
+                  f"Server status code = {response.status_code} = Data Valid!")
         else:
             print(f"Failed to fetch data for {day_str}: {response.status_code}")
 
         writer1.writerow([
-            timestamp.date(), f"{temp_max:.1f}", f"{temp_min:.1f}", indicator,
+            timestamp.date().strftime('%m-%d-%Y'), f"{temp_max:.1f}", f"{temp_min:.1f}", indicator,
         ])
         current -= delta
         offset += 1
