@@ -1,41 +1,54 @@
 import tkinter as tk
 from tkinter import filedialog
 import csv
+from datetime import datetime
 
-def load_csv_to_dict():
-    # Suppress root window
-    root = tk.Tk()
-    root.withdraw()
+# Suppress root window
+root = tk.Tk()
+root.withdraw()
 
-    # Open file dialog
-    filepath = filedialog.askopenfilename(
-        title="Select a CSV File",
-        filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+# Open file dialog
+filepath = filedialog.askopenfilename(
+    title="Select a CSV File",
+    filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
     )
 
-    if not filepath:
-        print("No file selected.")
-        return None
+if not filepath:
+    print("No file selected.")
 
-    # Read CSV into dictionary
-    data_dict = {}
-    with open(filepath, mode='r', newline='', encoding='utf-8') as file:
-        reader = csv.reader(file)
-        headers = next(reader, None)  # Skip header row if present
-
-        for row in reader:
-            if row:
-                key = row[0]
-                value = row[1:]
-                data_dict[key] = value
-
-    return data_dict
+# Read CSV into dictionary
+with open(filepath, newline='') as csvfile:
+    reader = csv.DictReader(csvfile)
+    data_list = list(reader)
 
 # 📍 Main code starts here
-csv_data = load_csv_to_dict()
-if csv_data:
-    print("🔎 Dictionary contents:")
-    for key, values in csv_data.items():
-        print(f"{key}: {values}")
-else:
-    print("❌ No data to display.")
+num_rows = len(data_list)
+print(f"Number of rows: {num_rows}")
+
+def find_data(biller, start_date, end_date):
+    number_withdrawals = 0
+    total_amount = 0
+    for i in range(num_rows):
+        # print(data_list[i])
+        if biller in (data_list[i]['Description']):
+            if number_withdrawals < 12:
+                target_date = datetime.strptime((data_list[i]['Date']), "%m/%d/%y")
+                if start_date <= target_date <= end_date:
+                    number_withdrawals += 1
+                    print(data_list[i])
+                    cleaned = (data_list[i]['Amount'])
+                    cleaned = float(cleaned.replace("$", "").replace(",", ""))
+                    total_amount = total_amount + cleaned
+                    # target_date = datetime.strptime((data_list[i]['Date']), "%m/%d/%y")
+                    # if start_date <= target_date <= end_date:
+                    # print("OK")
+
+            # print(total)
+    return number_withdrawals, total_amount
+            # print("Found")
+
+biller = "External Withdrawal CHASE CARD SERV"
+start_date = datetime.strptime("01/01/24", "%m/%d/%y")
+end_date = datetime.strptime("06/30/25", "%m/%d/%y")
+withdrawals, total = find_data(biller, start_date, end_date)
+print(biller, withdrawals, total)
