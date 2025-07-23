@@ -60,14 +60,14 @@ print(f"Number of rows: {num_rows}")
 start_date = datetime.strptime("01/01/24", "%m/%d/%y")
 end_date = datetime.strptime("06/30/25", "%m/%d/%y")
 cc_total = 0
-
+ed_total = 0
+gr_total = 0
+sm_total = 0
 
 
 with open("input.csv", newline="") as f:
     reader = csv.DictReader(f)
     for row in reader:
-        print(f"{row['Biller']}  {row['MAX']}  {row['CC']} ")
-
         biller = row['Biller']
         file.write("\n")
         file.write(biller + "\n")
@@ -75,12 +75,24 @@ with open("input.csv", newline="") as f:
         for line in lines:
             file.write(line + "\n")
         file.write(f"Biller:{biller}, #:{withdrawals}, Total:{total}" + "\n")
-        if row['CC'] == "1":
+        if row['TYPE'] == "CC":
             cc_total += total
+        if row['TYPE'] == "ED":
+            ed_total += total
+        if row['TYPE'] == "GR":
+            gr_total += total
+        if row['TYPE'] == "SM":
+            sm_total += total
 
 file.write("\n")
 s = start_date.strftime("%m/%d/%Y")
 e = end_date.strftime("%m/%d/%Y")
-file.write(f"Start Date:{s}, End Date:{e}" + "\n")
+file.write(f"Start Date:{s}, End Date:{e}" + "\n\n")
 file.write(f"Total Credit Cards = {int(cc_total)}" + "\n")
-file.write(f"Total Credit Cards Monthly = {int(cc_total/12)}" + "\n")
+file.write(f"Total Credit Cards Monthly = {int(cc_total/12)}" + "\n\n")
+file.write(f"Total Edison = {int(ed_total)}" + "\n")
+file.write(f"Total Edison Monthly = {int(ed_total/12)}" + "\n\n")
+file.write(f"Total Golden Rain = {int(gr_total)}" + "\n")
+file.write(f"Total Golden Rain Monthly = {int(gr_total/12)}" + "\n\n")
+file.write(f"Total State Of Michigan = {int(sm_total)}" + "\n")
+file.write(f"Total State Of Michigan Monthly = {int(sm_total/12)}" + "\n\n")
