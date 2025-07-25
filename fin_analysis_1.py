@@ -9,34 +9,26 @@ from dateutil.relativedelta import relativedelta
 root = tk.Tk()
 root.withdraw()
 
-def find_data(search, start_date, end_date, max):
+def find_data(search, start_date, end_date):
     number_withdrawals = 0
     total_amount = 0
     lines = []
     for i in range(num_rows):
         # print(data_list[i])
         if search in (data_list[i]['Description']):
-            if number_withdrawals < max:
-                target_date = datetime.strptime((data_list[i]['Date']), "%m/%d/%y")
-                if start_date <= target_date <= end_date:
-                    number_withdrawals += 1
-                    # print(data_list[i])
-                    cleaned = (data_list[i]['Amount'])
-                    cleaned = float(cleaned.replace("$", "").replace(",", ""))
-                    total_amount += cleaned
-                    t = target_date.strftime("%m/%d/%Y")
-                    # print("    ", t, total_amount)
-                    lines.append("    " + str(t) + "   " + str(cleaned))
-                    # target_date = datetime.strptime((data_list[i]['Date']), "%m/%d/%y")
-                    # if start_date <= target_date <= end_date:
-                    # print("OK")
-
-            # print(total)
+            target_date = datetime.strptime((data_list[i]['Date']), "%m/%d/%y")
+            if start_date <= target_date <= end_date:
+                number_withdrawals += 1
+                cleaned = (data_list[i]['Amount'])
+                cleaned = float(cleaned.replace("$", "").replace(",", ""))
+                total_amount += cleaned
+                t = target_date.strftime("%m/%d/%Y")
+                lines.append("    " + str(t) + "   " + str(cleaned))
     return number_withdrawals, total_amount, lines
-            # print("Found")
 
 # 📍 Main code starts here
 # Open file dialog
+months = 12
 filepath = filedialog.askopenfilename(
     title="Select a CSV File",
     filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
@@ -59,7 +51,7 @@ num_rows = len(data_list)
 print(f"Number of rows: {num_rows}")
 
 today = datetime.now()
-start_date = today - relativedelta(years=1)
+start_date = today - relativedelta(months=months)
 end_date = today
 
 cc_total = 0
@@ -72,13 +64,13 @@ with open("input.csv", newline="") as f:
         name = row['Name']
         file.write("\n")
         file.write(name + "\n")
-        withdrawals, total, lines = find_data(search, start_date, end_date, int(row['MAX']))
+        withdrawals, total, lines = find_data(search, start_date, end_date)
         for line in lines:
             file.write(line + "\n")
-        file.write(f"{name}, #:{withdrawals}, Total:{int(total)},  Average:{int(total/12)}" + "\n")
+        file.write(f"{name}, #:{withdrawals}, Total:{int(total)},  Average:{int(total/months)}" + "\n")
         if row['TYPE'] == "CC":
             cc_total += total
-            cc_average += total/12
+            cc_average += total/months
 
 file.write("\n")
 s = start_date.strftime("%m/%d/%Y")
