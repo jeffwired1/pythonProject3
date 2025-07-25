@@ -60,10 +60,7 @@ print(f"Number of rows: {num_rows}")
 
 today = datetime.now()
 start_date = today - relativedelta(years=1)
-# start_date = datetime.strptime("07/31/24", "%m/%d/%y")
 end_date = today
-# new_date = start_date - relativedelta(years=1)
-print(start_date,end_date,today)
 
 cc_total = 0
 cc_average = 0
@@ -78,16 +75,15 @@ with open("input.csv", newline="") as f:
         withdrawals, total, lines = find_data(search, start_date, end_date, int(row['MAX']))
         for line in lines:
             file.write(line + "\n")
-        file.write(f"{name}, #:{withdrawals}, Total:{int(total)},  Average:{int(total/withdrawals)}" + "\n")
+        file.write(f"{name}, #:{withdrawals}, Total:{int(total)},  Average:{int(total/12)}" + "\n")
         if row['TYPE'] == "CC":
             cc_total += total
-            cc_average += total/withdrawals
+            cc_average += total/12
 
 file.write("\n")
 s = start_date.strftime("%m/%d/%Y")
 e = end_date.strftime("%m/%d/%Y")
 file.write(f"Start Date:{s}, End Date:{e}" + "\n\n")
 file.write(f"Total Credit Cards = {int(cc_total)}" + "\n")
-file.write(f"Total Credit Cards Average= {int(cc_average)}" + "\n")
-file.write(f"Total Credit Cards Monthly = {int(cc_total/12)}" + "\n\n")
+file.write(f"Total Credit Cards Monthly = {int(cc_average)}" + "\n")
 
