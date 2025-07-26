@@ -23,7 +23,7 @@ def find_data(search, start_date, end_date):
                 cleaned = float(cleaned.replace("$", "").replace(",", ""))
                 total_amount += cleaned
                 t = target_date.strftime("%m/%d/%Y")
-                lines.append("    " + str(t) + "   " + str(cleaned))
+                lines.append("    " + str(t) + "   " + str(format(cleaned, ".2f")))
     return number_withdrawals, total_amount, lines
 
 # 📍 Main code starts here
@@ -48,7 +48,7 @@ file = open("accout.txt", "w")
 
 
 num_rows = len(data_list)
-print(f"Number of rows: {num_rows}")
+# print(f"Number of rows: {num_rows}")
 
 today = datetime.now()
 start_date = today - relativedelta(months=months)
@@ -67,7 +67,9 @@ with open("input.csv", newline="") as f:
         withdrawals, total, lines = find_data(search, start_date, end_date)
         for line in lines:
             file.write(line + "\n")
-        file.write(f"{name}, #:{withdrawals}, Total:{int(total)},  Average:{int(total/months)}" + "\n")
+        total_formatted = format(float(total), ".2f")
+        average_formatted = format(float(total/months), ".2f")
+        file.write(f"{name}, #:{withdrawals}, Total:{total_formatted},  Average:{average_formatted}" + "\n")
         if row['TYPE'] == "CC":
             cc_total += total
             cc_average += total/months
@@ -76,6 +78,8 @@ file.write("\n")
 s = start_date.strftime("%m/%d/%Y")
 e = end_date.strftime("%m/%d/%Y")
 file.write(f"Start Date:{s}, End Date:{e}" + "\n\n")
-file.write(f"Total Credit Cards = {int(cc_total)}" + "\n")
-file.write(f"Total Credit Cards Monthly = {int(cc_average)}" + "\n")
+cc_total_formatted = format(cc_total, ".2f")
+cc_average_formatted = format(cc_average, ".2f")
+file.write(f"Total Credit Cards = {cc_total_formatted}" + "\n")
+file.write(f"Total Credit Cards Monthly = {cc_average_formatted}" + "\n")
 
