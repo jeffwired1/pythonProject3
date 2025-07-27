@@ -4,20 +4,21 @@ import csv
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+# This program takes a download from a banking account and analyses the contents for monthly expenses
 
-# Suppress root window
+# Suppress tkinter root window
 root = tk.Tk()
 root.withdraw()
 
+# This function searches the downloaded banking file for data
 def find_data(search, start_date, end_date):
-    number_withdrawals = 0
-    total_amount = 0
-    lines = []
-    for i in range(num_rows):
-        # print(data_list[i])
-        if search in (data_list[i]['Description']):
+    number_withdrawals = 0  # Number of instances found
+    total_amount = 0  # Total abount
+    lines = []  # Clear array
+    for i in range(num_rows):  # Search each row of banking file for desired data
+        if search in (data_list[i]['Description']):  # Continue if line of data matches selection
             target_date = datetime.strptime((data_list[i]['Date']), "%m/%d/%y")
-            if start_date <= target_date <= end_date:
+            if start_date <= target_date <= end_date:  # Continue if date of entry falls between chosen dates
                 number_withdrawals += 1
                 cleaned = (data_list[i]['Amount'])
                 cleaned = float(cleaned.replace("$", "").replace(",", ""))
@@ -27,8 +28,7 @@ def find_data(search, start_date, end_date):
     return number_withdrawals, total_amount, lines
 
 # 📍 Main code starts here
-# Open file dialog
-# months = 12
+# Open tkinter file dialog
 filepath = filedialog.askopenfilename(
     title="Select a CSV File",
     filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
@@ -37,23 +37,20 @@ filepath = filedialog.askopenfilename(
 if not filepath:
     print("No file selected.")
 
-# Read CSV into dictionary
+# Read selected CSV file into dictionary
 with open(filepath, newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     data_list = list(reader)
 
-# 📍 Main code starts here
+file = open("accout.txt", "w")  # Open output file
 
-file = open("accout.txt", "w")
+num_rows = len(data_list)  # Get number of rows in data file
 
-
-num_rows = len(data_list)
-# print(f"Number of rows: {num_rows}")
-
+# Credit card entries are added together at the end
 cc_total = 0
 cc_average = 0
 
-with open("input.csv", newline="") as f:
+with open("input.csv", newline="") as f:  # Open search definition file
     lines = f.readlines()
 
 # Split into two header blocks
@@ -63,19 +60,17 @@ for i, line in enumerate(lines):
         split_index = i
         break
 
-section1 = lines[:split_index]
-section2 = lines[split_index + 1:]  # skip the blank line
+section1 = lines[:split_index]  # Options section
+section2 = lines[split_index + 1:]  # skip the blank line and get search definitions section
 
 options = csv.DictReader(section1)
 rows = list(options)
-months = float(rows[0]['Months'])
+months = float(rows[0]['Months'])  # Get # months for analysis
 today = datetime.now()
-start_date = today - relativedelta(months=months)
+start_date = today - relativedelta(months=months)  # Start date = today - # months
 end_date = today
 
-# with open("input.csv", newline="") as f:
 reader = csv.DictReader(section2)
-# reader = csv.DictReader(f)
 for row in reader:
     search = row['Search']
     name = row['Name']
