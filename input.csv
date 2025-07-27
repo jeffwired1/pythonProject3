@@ -1,3 +1,6 @@
+Months,Option_1,Option_2
+12,0,0
+
 Name,Search,TYPE
 Chase CC,CHASE CARD SERV,CC
 American Express CC,AMERICAN EXPRESS,CC
@@ -13,3 +16,5 @@ Golden Rain,GOLDEN RAIN,0
 Mother Annuity, NORTHWESTERN,0
 Mother IRA,0334,0
 AAA Insurance,AAA,0
+
+
