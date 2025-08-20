@@ -29,7 +29,7 @@ try:
         })
 
     df_forecast = pd.DataFrame(forecast_data)
-    print(df_forecast.head(20))  # Show first 20 entries
+    print(df_forecast.head(80))  # Show first 20 entries
 
 except requests.exceptions.RequestException as e:
     print(f"Request error: {e}")
